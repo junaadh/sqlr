@@ -1,4 +1,6 @@
-use self::statements::{prepare_statements, Statement};
+use crate::{errors::Errors, processor::execute};
+
+use self::statements::Statement;
 
 pub mod commands;
 pub mod meta;
@@ -18,11 +20,11 @@ impl InputBuffer {
     }
 }
 
-pub fn run(buffer: &mut InputBuffer) {
+pub fn run(buffer: &mut InputBuffer) -> Result<(), Errors> {
     commands::prompt();
-    commands::read(&mut buffer.buffer).unwrap();
+    commands::read(&mut buffer.buffer).unwrap_or_default();
     evaluate(buffer);
-    prepare_statements(buffer);
+    execute(buffer)
 }
 
 fn evaluate(buffer: &mut InputBuffer) {

@@ -5,6 +5,11 @@ pub enum Errors {
     ExitSuccess,
     UnrecognizedMetaCommand,
     UnrecognizedCommand,
+    InsufficientArguments,
+    InvalidTableColums,
+    TableNotFound,
+    SyntaxError,
+    // ParseError,
 }
 
 impl Errors {
@@ -20,6 +25,20 @@ impl Errors {
             Self::UnrecognizedCommand => {
                 println!("Unrecognized command: {}", buf.unwrap());
             }
+            Self::InsufficientArguments => {
+                println!("Insufficient amount of args: {}", buf.unwrap());
+            }
+            Self::InvalidTableColums => {
+                println!("Invalid number of table colums: {}", buf.unwrap());
+            }
+            Self::TableNotFound => {
+                println!("Table not found: {}", buf.unwrap());
+            }
+            Self::SyntaxError => {
+                println!("Syntax error at: {}", buf.unwrap());
+            } // Self::ParseError => {
+              //     println!("Parse error");
+              // }
         }
     }
 }
