@@ -79,9 +79,10 @@ fn prepare_statements(buffer: &mut InputBuffer) {
         Statements::NoInput => (),
         Statements::Create => (),
         Statements::Insert => (),
-        _ => {
-            println!("You have evoked the {}", buffer.statement.opcode_string);
-        }
+        Statements::Select => (),
+        // _ => {
+        // println!("You have evoked the {}", buffer.statement.opcode_string);
+        // }
     }
 }
 
@@ -89,6 +90,7 @@ fn process_statements(buffer: &mut InputBuffer) {
     match buffer.statement.opcode {
         Statements::Insert => create_value_buf(buffer),
         Statements::Create => create_value_buf(buffer),
+        Statements::Select => create_value_buf(buffer),
         _ => {}
     }
 }
@@ -97,4 +99,5 @@ fn create_value_buf(buffer: &mut InputBuffer) {
     let split: Vec<&str> = buffer.buffer.split(' ').collect();
     let string: Vec<String> = split.into_iter().map(|x| x.to_string()).collect();
     buffer.statement.state_buffer = string;
+    buffer.buffer = String::new();
 }

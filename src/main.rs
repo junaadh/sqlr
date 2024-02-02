@@ -5,9 +5,10 @@ pub mod processor;
 pub mod repl;
 
 fn main() {
-    wlc_prompt("0.0.1");
+    wlc_prompt("0.1.0");
+    let mut buffer = repl::InputBuffer::default();
     loop {
-        let mut buffer = repl::InputBuffer::new();
+        buffer.clear();
         if repl::run(&mut buffer).is_err() {
             continue;
         };

@@ -1,11 +1,26 @@
 use crate::{errors::Errors, processor::pretty_print_all};
 
-pub fn evaluate_meta(buffer: &str) {
-    match buffer {
-        ".exit" => Errors::handler(Errors::ExitSuccess, None),
-        ".help" => help_prompt(),
-        ".tables" => pretty_print_all(),
-        _ => Errors::handler(Errors::UnrecognizedMetaCommand, Some(buffer)),
+use super::InputBuffer;
+
+pub fn evaluate_meta(buffer: &InputBuffer) -> Result<(), Errors> {
+    let buf = buffer.buffer.trim();
+    match buf {
+        ".exit" => {
+            Errors::handler(Errors::ExitSuccess, None);
+            Err(Errors::ExitSuccess)
+        }
+        ".help" => {
+            help_prompt();
+            Ok(())
+        }
+        ".tables" => {
+            // println!("{:?}", &buffer);
+            pretty_print_all(buffer)
+        }
+        _ => {
+            Errors::handler(Errors::UnrecognizedMetaCommand, Some(buf));
+            Ok(())
+        }
     }
 }
 

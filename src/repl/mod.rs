@@ -1,4 +1,7 @@
-use crate::{errors::Errors, processor::execute};
+use crate::{
+    errors::Errors,
+    processor::{self, execute},
+};
 
 use self::statements::Statement;
 
@@ -6,17 +9,28 @@ pub mod commands;
 pub mod meta;
 pub mod statements;
 
+#[derive(Debug)]
 pub struct InputBuffer {
     pub buffer: String,
     pub statement: statements::Statement,
+    pub execution: processor::ExecutionBuffer,
 }
 
-impl InputBuffer {
-    pub fn new() -> Self {
+impl Default for InputBuffer {
+    fn default() -> Self {
         Self {
             buffer: String::new(),
             statement: Statement::place_holder(),
+            #[allow(clippy::box_default)]
+            execution: processor::ExecutionBuffer::new(),
         }
+    }
+}
+
+impl InputBuffer {
+    pub fn clear(&mut self) {
+        self.buffer = String::new();
+        self.statement = Statement::place_holder();
     }
 }
 
@@ -30,7 +44,7 @@ pub fn run(buffer: &mut InputBuffer) -> Result<(), Errors> {
 fn evaluate(buffer: &mut InputBuffer) {
     let buf = buffer.buffer.trim();
     if buf.starts_with('.') {
-        meta::evaluate_meta(buf);
+        let _ = meta::evaluate_meta(buffer);
     } else {
         statements::evaluate_statements(buffer);
     }
