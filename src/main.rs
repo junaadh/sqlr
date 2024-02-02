@@ -8,7 +8,6 @@ fn main() {
     wlc_prompt("0.1.0");
     let mut buffer = repl::InputBuffer::default();
     loop {
-        buffer.clear();
         if repl::run(&mut buffer).is_err() {
             continue;
         };

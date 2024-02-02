@@ -21,7 +21,6 @@ impl Default for InputBuffer {
         Self {
             buffer: String::new(),
             statement: Statement::place_holder(),
-            #[allow(clippy::box_default)]
             execution: processor::ExecutionBuffer::new(),
         }
     }
@@ -35,6 +34,7 @@ impl InputBuffer {
 }
 
 pub fn run(buffer: &mut InputBuffer) -> Result<(), Errors> {
+    buffer.clear();
     commands::prompt();
     commands::read(&mut buffer.buffer).unwrap_or_default();
     evaluate(buffer);

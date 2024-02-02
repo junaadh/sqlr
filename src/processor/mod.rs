@@ -25,50 +25,6 @@ impl ExecutionBuffer {
     }
 }
 
-// pub static mut TABLES_VECTOR: Vec<Table> = Vec::new(); // unsafe
-// lazy_static! {
-//     static ref TABLES_VECTOR: Mutex<Vec<Table>> = Mutex::new(Vec::new());
-// }
-
-// pub fn add_table(table: Table) {
-//     let mut table_vector = TABLES_VECTOR.lock().unwrap();
-//     table_vector.push(table);
-// }
-
-// pub fn get_table(name: &str) -> Option<usize> {
-//     let mut table_vector = TABLES_VECTOR.lock().unwrap();
-//     if let Some(index) = table_vector
-//         .iter()
-//         .position(|elem| elem.name.eq_ignore_ascii_case(name))
-//     {
-//         Some(index)
-//     } else {
-//         None
-//     }
-// }
-
-// pub fn pretty_print_all(buf: &InputBuffer) -> Result<(), Errors> {
-//     // let tables = TABLES_VECTOR.lock().unwrap();
-//     let tables: Result<Vec<Table>, Result<(), Errors>> =
-//         unsafe { buf.execution.as_ref().map(|x| &x.table_vector) }.ok_or_else(|| {
-//             Errors::handler(Errors::TableNotFound, Some(" "));
-//             return Err(Errors::TableNotFound);
-//         });
-//     match tables {
-//         Ok(tables) => {
-//             if tables.is_empty() {
-//                 println!("No tables created yet");
-//             } else {
-//                 for table in tables.iter() {
-//                     table.pretty_print();
-//                 }
-//             }
-//             Ok(())
-//         }
-//         Err(_) => Err(Errors::TableNotFound),
-//     }
-// }
-
 pub fn pretty_print_all(buf: &InputBuffer) -> Result<(), Errors> {
     let tables = buf.execution.table_vector.clone();
     if tables.is_empty() {
@@ -104,7 +60,7 @@ mod tests {
     #[test]
     fn table_adding() {
         let mut buffer = InputBuffer::default();
-        let table = Table::new("test", vec![TableHeader::new("field", "type")], None);
+        let table = Table::new("test", vec![TableHeader::new("field", "type")]);
         buffer.execution.add_tables(table);
         assert!(!buffer.execution.table_vector.is_empty());
         assert_eq!(buffer.execution.table_vector.len(), 1);
@@ -116,7 +72,7 @@ mod tests {
         let mut buffer = InputBuffer::default();
         buffer.buffer.push_str("create table test ( field type )");
         evaluate_statements(&mut buffer);
-        let table = Table::new("test", vec![TableHeader::new("field", "type")], None);
+        let table = Table::new("test", vec![TableHeader::new("field", "type")]);
         let result = execute_create(&mut buffer);
         assert!(result.is_ok());
         assert!(!buffer.execution.table_vector.is_empty());
